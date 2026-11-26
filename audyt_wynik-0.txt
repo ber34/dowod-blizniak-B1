@@ -1,0 +1,15 @@
+Próbki niezależne SymPy: 133 (pierwszość, faktoryzacja, mu, Ssmall): OK
+Bezpośrednia kontrola modelu (moduły e) na pierwszej skali: 22 wierszy: OK
+Powtórne uruchomienie: identyczne CSV: True
+Zgodność liczebności z etapem 210 z uwzględnieniem odcięcia końców: OK
+Warunek B2<4, bilanse i dolna granica skończona: OK
+Badane m: 29738803 okna: 2309 bliźniaki: 455811
+Rezerwy [(5, 0.06601618158468696), (7, 0.09588064468252154), (11, 0.1070119445644417), (13, 0.1147895835845013), (17, 0.11922169405549114), (19, 0.12273368802519363), (23, 0.1251004665699931), (29, 0.12657241628073665)]
+Przybliżony przedział K_inf (ograniczenie ogona produktu): 0.1353410763470278 0.1353422613295832
+Liczba dodatnich K5+R: 29 z 30
+Liczba dodatnich KE+R: 29 z 30
+Niepowodzenia KE+R:
+            A    a    r       Rn       KE      netE      err  finite_lower
+1000000000000 3730 5120 -0.13163 0.122084 -0.009546 0.109371      0.099825
+Maksymalny błąd modelu na jednostkę długości 5.601186745038181e-05
+SHA256 wyniki211.csv c985948b455c5ddab5c955cc17bb05d7fd6f85bf855818014896a15fa133f641

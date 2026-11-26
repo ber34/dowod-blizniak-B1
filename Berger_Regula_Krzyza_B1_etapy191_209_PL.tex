@@ -1,0 +1,802 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[polish]{babel}
+\usepackage{lmodern,amsmath,amssymb,amsthm,mathtools,booktabs,longtable,array,microtype}
+\usepackage[margin=24mm]{geometry}
+\usepackage{xcolor,hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue!45!black,urlcolor=blue!50!black,citecolor=blue!45!black}
+\newtheorem{tw}{Twierdzenie}[section]
+\newtheorem{lem}[tw]{Lemat}
+\newtheorem{wn}[tw]{Wniosek}
+\theoremstyle{definition}\newtheorem{defn}[tw]{Definicja}
+\theoremstyle{remark}\newtheorem*{uw}{Uwaga}
+\newcommand{\Pp}{\mathbb P}
+\newcommand{\R}{\mathcal R}
+\newcommand{\B}{\mathcal B}
+\newcommand{\T}{\mathcal T}
+\newcommand{\one}{\mathbf1}
+\newcommand{\D}{\mathcal D}
+\newcommand{\HH}{\mathcal H}
+\newcommand{\PP}{\mathrm{PP}}
+\newcommand{\Ptwo}{\mathrm{P}_2}
+\newcommand{\eps}{\varepsilon}
+\DeclareMathOperator{\ord}{ord}
+\title{\textbf{Reguła Krzyża, rytm 4--6--0 i bariera parzystości}\\[4pt]\large Wspólny bilans CRT--Möbiusa, ruchomy Czybyszew\\i dodatnie jądra Newtona\\\normalsize Audyt etapów 191--209 oraz synteza wcześniejszego programu v10}
+\author{Adam Berger --- projekt badawczy\\\small Opracowanie i audyt z pomocą ChatGPT (GPT-6.2)}
+\date{26 listopada 2026 r.\quad Wersja audytowa 1.0}
+\begin{document}
+\maketitle
+\begin{abstract}
+Przedstawiamy jeden spójny zapis konstrukcji dwóch ramion, rytmu 4--6--0,
+proporcji CRT $25/17$, momentu Liouville'a, naturalnych okien Czybyszewa,
+oraz podpisanej reszty Möbiusa B1. Dodatnie wielomiany Newtona pozwalają
+wygasić wkład dowolnej skończonej liczby bliźniaków. Dla $a=3730$, $r=5120$,
+$u=1/20$ odtworzono wszystkie $10^8$ współczynników i uzyskano skierowaną
+arytmetyką przedziałową certyfikat $10^{2619}\B_{a,r}(u)<-20{,}49$, obejmujący
+również nieskończony ogon. Wyprowadzamy także wspólne kryterium B1 z dodatnim
+jądrem na blokach dyadycznych. Żaden wynik skończony nie rozstrzyga jednak
+znaku w granicy $u\downarrow0$. Dokument nie przedstawia dowodu nieskończoności
+bliźniaków: precyzuje brakujący lemat analityczny. Plik Lean formalizuje
+rdzeń algebraiczny i logiczny redukcji, nie zastępując otwartych oszacowań.
+\end{abstract}
+\clearpage
+\tableofcontents
+\clearpage
+\section{Status i zakres audytu}
+W całej pracy rozróżniamy: (i) tożsamość ścisłą, (ii) wniosek z klasycznego
+twierdzenia analitycznego, (iii) wynik obliczeniowy, (iv) model heurystyczny,
+(v) otwarty lemat. W szczególności nie utożsamiamy rozkładu kandydatów CRT z
+rozkładem pierwszych; nie utożsamiamy lokalnej wariancji z globalnym błędem;
+nie przyjmujemy RH, GRH, EH ani Hardy'ego--Littlewooda w redukcji B1.
+
+Zakres zasadniczy: etapy 191--209. Włączono fundamenty v10, rytm 48 i użyteczne
+wnioski etapów 178--190. Nie reprodukujemy wszystkich wcześniejszych prób
+biliniowych jako dowodów: ich pełne oszacowania nie zostały niezależnie
+zweryfikowane i nie są przesłankami twierdzeń poniżej. W szczególności nie
+zakładamy przełamania parzystości w nowych preprintach.
+
+\begin{center}
+\begin{tabular}{p{0.56\linewidth}p{0.33\linewidth}}
+\toprule
+Element & Status\\\midrule
+Reguła Krzyża, rytm, teleskop, momenty, jądra & tożsamości\\
+Proporcja $25/17$ w pełnych okresach & ścisła\\
+Jedna pierwsza i płytkie sito & BV + lemat fundamentalny\\
+Dodatnie jądro i zanik skończonego wkładu & ścisłe\\
+Odtworzenie danych $10^8$, znak przy $u=1/20$ & certyfikat obliczeniowy\\
+Wariancja, oś $1/4$, asymptotyka $L$ & modele / pomiary\\
+B1, B1 wygładzone, znak gdy $u\to0$ & otwarte\\\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Fundament: dwa ramiona i Reguła Krzyża}
+Niech $m\ge1$ i
+\[
+ L_m=6m-1,\qquad C_m=12m^2-1,\qquad R_m=6m+1.
+\]
+Mamy dokładnie
+\begin{equation}\label{eq:cross}
+ L_m+R_m=12m,\qquad R_m-L_m=2,\qquad L_mR_m=3C_m+2.
+\end{equation}
+Ponieważ $\gcd(L_m,R_m)=1$ i oba są większe od 1, specjalny prawy stan
+$\Omega(L_mR_m)=2$ jest równoważny pierwszości obu ramion. Z kolei
+$\Omega(3C_m)=2$ jest równoważne pierwszości $C_m$; jednoczesny stan
+specjalny $\mathrm{P}_2\mathrm{P}_2$ pary $(3C_m,L_mR_m)$ jest równoważny
+$\mathrm{PPP}$. Nie mylić tego ze zwykłym stanem dwóch semipierwszych ramion.
+Środkowy $C_m$ nie jest potrzebny do samego twierdzenia o bliźniakach.
+
+Dla $p>3$ klasy ramion to $m\equiv\pm6^{-1}\pmod p$. Dla środka
+$(6m)^2\equiv3\pmod p$, podczas gdy dla ramion $(6m)^2\equiv1\pmod p$.
+Te zbiory są rozłączne. Dla $p>3$ i $p\nmid k$ wspólna podzielność
+$C_m,C_{m+k}$ wymusza $p\mid3k^2-1$; dla $k=8$ (rytm 48) jest to $p=191$.
+Wynika to z $C_{m+k}-C_m=12k(2m+k)$.
+
+\subsection{Teleskop sita armowego v10}
+Niech $I$ będzie skończonym oknem indeksów, $H=|I|$ i $n_t$ liczbą
+pozycji, które przetrwały eliminatory do $t$. Przy porządku rosnącym
+(właśnie dla tej wersji teleskopu), $\ell_p=n_{p^-}-n_p$,
+\[
+ E_p=\ell_p-\frac2p n_{p^-},\qquad M_t=H\prod_{5\le p\le t}\left(1-\frac2p\right).
+\]
+Stąd $n_p=(1-2/p)n_{p^-}-E_p$, $M_p=(1-2/p)M_{p^-}$ i
+\begin{equation}\label{eq:tel}
+ \frac{E_p}{M_p}=\frac{n_{p^-}}{M_{p^-}}-\frac{n_p}{M_p},\qquad
+ \sum_{47<p\le z}\frac{E_p}{M_p}=\frac{n_{47}}{M_{47}}-\frac{n_z}{M_z}.
+\end{equation}
+Jeżeli $z\ge\sqrt{\max R_m}$, $n_z$ jest liczbą bliźniaków pod warunkiem,
+że nie skreślamy pierwszej równej eliminatorowi (np. $\min L_m>z$).
+Reguła pierwszeństwa większego eliminatora zachowuje końcowy zbiór, ale
+zmienia poszczególne $E_p$; nie wolno wstawiać skreśleń liczonych malejąco do
+wzoru \eqref{eq:tel} z rosnącym $p^-$. Teleskop sam nie daje dolnego oszacowania.
+
+\section{Rytm 4--6--0 i wspólne momenty}
+Eliminator 5 pozostawia $m\equiv0,2,3\pmod5$. Zatem dla par większych od
+$(5,7)$ sumy ramion są $0,24,36\pmod{60}$, a końcówki mają cykl $4,6,0$.
+Wprowadzamy jeden cykl
+\begin{equation}\label{eq:cycle}
+ T_4=(30k+11,30k+13),\quad T_6=(30k+17,30k+19),\quad
+ T_0=(30k+29,30k+31).
+\end{equation}
+Parametry $m$ to $5k+2,5k+3,5k+5$. Kolejne przyrosty sum to $12,24,24$;
+dwa przyrosty 24 dają 48 w sumie, czyli 24 w ramieniu (nie 48).
+Symetria $m\mapsto-m\pmod5$ sprzęga tory 4 i 6. W szczególności
+$C_4(k)=300k^2+240k+47$, $C_6(k)=300k^2+360k+107$,
+$C_0(k)=300k^2+600k+299$ i $C_4(-k-1)=C_6(k)$.
+
+\subsection{Eliminatory i dokładny okres (etap 192)}
+\begin{center}
+\begin{tabular}{rrrr}
+\toprule $p$&klasy ramion $m$&klasy środka $m$&liczba\\\midrule
+5&1,4&--&2\\7&1,6&--&2\\11&2,9&1,10&4\\13&2,11&5,8&4\\17&3,14&--&2\\19&3,16&--&2\\\bottomrule
+\end{tabular}
+\end{center}
+Pełny okres $1616615$; w każdym torze $323323$ pozycji. Eliminacja malejąco,
+z jednoznacznym przypisaniem największemu eliminatorowi z użytego zbioru:
+\begin{center}
+\begin{tabular}{rrr}
+\toprule $p$&tylko ramiona&całe LCR\\\midrule
+19&34034&34034\\17&34034&34034\\13&39270&78540\\11&39270&64260\\7&50490&32130\\\midrule
+Pozostaje&126225&80325\\\bottomrule
+\end{tabular}
+\end{center}
+Dokładna proporcja ocalałych LCR do LR wynosi $80325/126225=7/11$;
+$4/11$ to wykryte złożone środki wśród ocalałych ramion. Nadwyżka $3/11$
+dotyczy wyłącznie małego sita, nie stanu rzeczywistego PPP. Audyt
+odtworzył także pełny okres niezależnym sitem i testem SymPy środka:
+\begin{center}
+\begin{tabular}{rrrr}
+\toprule Tor&PP&PPP&PCP\\\midrule
+4&19255&2589&16666\\6&19179&2489&16690\\0&19017&2457&16560\\
+Razem&57451&7535&49916\\\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Trzeci moment i proporcja $25/17$}
+Dla wskaźników dowolnego rodzaju (przesiane albo pierwsze) niech
+$x_4,x_6,x_0\in\{0,1,2\}$ i $K=x_4+x_6+x_0$. W jednym cyklu
+\begin{equation}\label{eq:D3}
+ S_3=\binom K3,\quad H_3=x_4x_6x_0,\quad
+ D_3=S_3-H_3=\sum_{i\ne j}\binom{x_i}2x_j.
+\end{equation}
+Dowód: trójka wybiera albo po jednym końcu z każdego toru, albo oba końce
+jednego toru i jeden z pozostałych. Gdy $D_3>0$ dla wskaźników pierwszości,
+występują bliźniaki. $H_3>0$ nie jest konieczne do tego wniosku.
+Niech $\mathcal H=\{11,13,17,19,29,31\}$. Rodzina $\D$ ma 12 trójek
+z pełnym torem, rodzina porównawcza $\mathcal J$ ma 8 trójek.
+Dla $p\ge11$ trzy reszty każdej trójki są różne. Przy $p=7$ jedyna
+kolizja to $17\equiv31\pmod7$. W każdej rodzinie są po dwie trójki
+z tą kolizją. Współczynnik względny to $(7-2)/(7-3)=5/4$.
+\begin{tw}[Dokładna proporcja CRT]\label{th:ratio}
+Po dowolnym skończonym sicie na liczbach $p>5$ zawierającym 7, w pełnych
+okresach CRT zachodzi
+\[
+ \frac{D_3^{\mathrm{sito}}}{H_3^{\mathrm{sito}}}
+ =\frac{10+2\cdot5/4}{6+2\cdot5/4}=\frac{25}{17},\qquad
+ \frac{S_3^{\mathrm{sito}}}{H_3^{\mathrm{sito}}}=\frac{42}{17}.
+\]
+\end{tw}
+\begin{proof} Niezależność lokalnych warunków na pełnym okresie CRT pozwala
+pomnożyć ich gęstości. Wszystkie czynniki poza 7 skracają się w ilorazie.
+\end{proof}
+Dla rzeczywistych trójek warunek $D_3>H_3$ odpowiada względnej skuteczności
+$\rho_D/\rho_H>17/25=0{,}68$ na pełnym okresie, o ile $\rho_H>0$.
+Nie mamy dolnego ograniczenia tej względnej skuteczności.
+
+\subsection{Jedna pierwsza i płytkie sito; rytm 48}
+W każdej trójce wyróżniamy jeden koniec $a$: dla $\D$ lewy koniec pełnej
+pary, dla $\mathcal J$ najmniejszy koniec. Warunkowa gęstość eliminacji
+$p>5$ wynosi $(\nu_p(J)-1)/(p-1)$. Przy 7 stosunek wynosi ponownie $5/4$.
+Klasyczny lemat fundamentalny sita wraz z Bombierim--Winogradowem daje
+asymptotyczny stosunek $25/17$ w blokach $[A,2A)$ przy
+$z\to\infty$, $\log z=o(\log A)$: stosujemy sito do pierwszych w stałej
+progresji modulo 30 z poziomem $D=A^{\theta}$, $0<\theta<1/2$;
+$\log D/\log z\to\infty$. Błędy CRT sumuje się z wagami sita, a
+pozostałe dwa końce mają wymiar 2. Jest to zastosowanie standardowych
+narzędzi, nie dowód na głębokości $A^{1/3}$ (por. \cite{taosieve}).
+
+Wyniki Tao--Teräväinena o korelacjach rzędu 1,2,3 \cite{tt} dostarczają narzędzia do badania analogicznych proporcji ze znakami Liouville'a. Przy ustalonym $z$ potrzebna jest wersja dla skończonego zbioru ustalonych progresji (jej pełną adaptację pozostawiamy poza tym audytem). Dla ustalonego skończonego zbioru klas można wybrać wspólne dobre
+skale; diagonalizacja pozwala zwiększać $z$ dowolnie wolno. Nie daje jednak
+jednostajności potęgowej. To samo ograniczenie występuje w rytmie 48,
+przy $E=\{0,2,48,50\}$: dla $x,y\in\{0,1,2\}$
+$d=xy-\one_{x>0}\one_{y>0}$ spełnia $3d\ge(x+y)(x+y-2)$.
+Znaki po płytkim sicie nie certyfikują pierwszości.
+
+W progresji $k=77t+3$ tor 0 jest zawsze złożony (dla $t\ge0$):
+\[
+ 30k+29=7(330t+17),\qquad30k+31=11(210t+11).
+\]
+Trzy pierwsze wśród czterech pozostałych ramion wystarczą. Kontrprzykład
+przy $k=19253$: $577601$ jest pierwsza, lecz
+$577603=13\cdot157\cdot283$, $577607=37\cdot67\cdot233$,
+$577609=17\cdot61\cdot557$ mają też $\lambda=-1$.
+
+\section{Podpisany moment: precyzyjny detektor parzystości}
+Odtąd $k\ge1$, $n_h(k)=30k+h$, $z(k)=\lfloor(30k+31)^{1/3}\rfloor$,
+\[
+ R_h(k)=\one_{P^-(n_h(k))>z(k)},\qquad
+ \lambda_h(k)=(-1)^{\Omega(n_h(k))}.
+\]
+Wszystkie ocalałe liczby mają co najwyżej dwa czynniki pierwsze liczone
+z krotnością, gdyż każdy czynnik większy od $z(k)$ jest większy od
+rzeczywistego pierwiastka sześciennego. Wszystkie pierwsze ramiona są
+większe od $z(k)$. Zatem dla $k\ge1$ dokładnie
+\[
+ R_h(k)\frac{1-\lambda_h(k)}2=\one_{n_h(k)\in\Pp}.
+\]
+Wariant blokowy dla $A\le k<2A$ ma wspólny próg
+$z=\lfloor(60A+31)^{1/3}\rfloor$. Nie jest to ta sama funkcja co wariant
+punktowy; dane etapów 197--203 są blokowe, etap 209 jest punktowy.
+
+Dla trójki $(a,b,c)\in\D$, gdzie $(a,b)$ to pełny tor, definiujemy
+\begin{align*}
+ M_I&=\sum_{k\in I}\sum_{(a,b,c)\in\D}R_aR_bR_c,\\
+ L_I&=\sum_{k\in I}\ell(k),\quad
+ \ell(k)=\sum_{(a,b,c)\in\D}R_aR_bR_c(\lambda_a+\lambda_b),\\
+ C_I&=\sum_{k\in I}\sum_{(a,b,c)\in\D}R_aR_bR_c\lambda_a\lambda_b,\\
+ J_I&=\sum_{k\in I}\sum_{(a,b,c)\in\D}\one_{n_a,n_b\in\Pp}R_c.
+\end{align*}
+\begin{lem}[Tożsamość momentu i detekcja]\label{lem:sign}
+$4J_I=M_I-L_I+C_I$, $C_I\ge-M_I$, więc $J_I\ge-L_I/4$.
+Jeżeli $T(k)$ liczy pełne pierwsze tory w cyklu, to
+\[
+ |\ell(k)|\le24,\qquad \ell(k)\ge-8T(k).
+\]
+W szczególności $\ell(k)<0$ wymusza bliźniaki.
+\end{lem}
+\begin{proof}
+Rozwinięcie $(1-\lambda_a)(1-\lambda_b)$ daje tożsamość. Na przesianym
+pełnym torze suma znaków wynosi $-2,0,+2$ odpowiednio dla PP, stanów mieszanych
+i $\Ptwo\Ptwo$. Każdy tor ma najwyżej cztery dopuszczalne kotwice, zatem
+jeden pełny pierwszy tor wnosi co najmniej $-8$. Jest 12 trójek, każda o
+wartości bezwzględnej nie większej od 2.
+\end{proof}
+W szczególności $T(I)\ge-L_I/8$; $J_I$ i $D_3$ nie są tym samym:
+$J_I$ dopuszcza kotwicę semipierwszą, $D_3$ wymaga jej pierwszości.
+Skończenie wiele bliźniaków implikuje ostateczną nieujemność $\ell$.
+
+\section{Wyniki obliczeniowe i audyt danych}
+\subsection{Ślepy test na skali $10^{33}$ (193--195)}
+Początek ramion $1671875017670727170815930822929071$, milion cykli.
+Zapisano prognozę przed testem pierwszości. Plik \texttt{twins.csv} zawiera
+6877 par i 150 środków oznaczonych jako prawdopodobnie pierwsze.
+\begin{center}
+\begin{tabular}{rrrrr}
+\toprule Tor&Kandydaci $z=99991$&Prognoza PP&PP&PPP\\\midrule
+4&31322&2251,82&2266&49\\6&31403&2257,64&2354&41\\0&31420&2258,87&2257&60\\\midrule
+Razem&94145&6768,33&6877&150\\\bottomrule
+\end{tabular}
+\end{center}
+Audyt ponownie sprawdził wszystkie zapisane pary i wszystkie wartości $C$ przez SymPy; wyniki są zgodne. Testy GMP/SymPy były probabilistyczne na tej skali, nie formalne certyfikaty pierwszości. Na podstawie zapisanych obsad: $S_1=293744$, $S_2=34379$,
+$S_3=2064$, $H_3=847$, $D_3=1217$, $D_3-H_3=370$.
+Kontrmodel z zachowaniem masek i nierozdzielonych momentów, ale bez pełnego
+toru, pokazuje niewystarczalność tych momentów. Nie jest modelem rzeczywistej
+pierwszości. Certyfikat kontrmodelu jest w archiwum danych; audyt odtworzył wszystkie 64 częstości masek sita i ponownie sprawdził podzbiór każdej maski, brak par i trzy momenty.
+
+\subsection{Dokładne bloki $10^3$--$10^8$ (197--199)}
+\begin{center}
+\begin{tabular}{rrrrr}
+\toprule $A$&$M$&$L$&$D_3$&$H_3$\\\midrule
+$10^3$&1812&$-874$&421&302\\
+$10^4$&10197&$-5046$&2441&1627\\
+$10^5$&65453&$-29664$&15031&10258\\
+$10^6$&444020&$-186108$&97922&66550\\
+$10^7$&3118626&$-1270646$&680450&462365\\
+$10^8$&22661634&$-9074712$&4895178&3329391\\\bottomrule
+\end{tabular}
+\end{center}
+Dla $A=10^7$ porównanie ślepego sita i pełnego sita pierwszości:
+\begin{center}
+\begin{tabular}{rrrr}
+\toprule Próg&$D_3$&$H_3$&$D_3-H_3$\\\midrule
+Bez sita&120000000&80000000&40000000\\
+19&27712204&18844286&8867918\\
+97&9388096&6383623&3004473\\
+839&3118626&2120562&998064\\
+Pierwsze&680450&462365&218085\\\bottomrule
+\end{tabular}
+\end{center}
+Rzeczywiste pary: $332897,333289,333635$ (razem $999821$).
+Tożsamość $4\cdot1129213=3118626+1270646+127580$ sprawdzona.
+W skali $10^8$ proporcja rzeczywista $4895178/3329391\simeq1{,}470292$.
+Dane z $10^7$ i $10^8$ nie są jednak tym samym zakresem co zapis punktowy
+etapu 209.
+
+\subsection{Rozrzedzenie i fluktuacje (200--203)}
+W czterech przedziałach po $2\cdot10^8$ cykli:
+\begin{center}
+\begin{tabular}{rrrrr}
+\toprule $A$&$T$&$M$&$L$&cykli/PP\\\midrule
+$10^9$&13500520&36140835&$-13467164$&14,814\\
+$10^{10}$&11333570&28011021&$-10259564$&17,647\\
+$10^{11}$&9594707&21901297&$-7968534$&20,845\\
+$10^{12}$&8226756&17391043&$-6319490$&24,311\\\bottomrule
+\end{tabular}
+\end{center}
+Dla długości $w$ wprowadzono $N_{\mathrm{eff}}=w\rho_2(A)$, gdzie
+$\rho_2(A)=T/B$ jest gęstością empiryczną; model bez znajomości pierwszych
+to $\rho_0(A)=60C_2/\log^2(30A)$ z $C_2=\prod_{p>2}(1-(p-1)^{-2})$.
+Wykładnik dopasowania $\sigma\sim N_{\rm eff}^{2\alpha}$ dla ruchomych
+okien 1--10 mln w etapie 201 wyniósł $0{,}250129$, dla 1--20 mln
+$0{,}244987$. Dla równej oczekiwanej masy $0{,}244293$.
+Dopasowania w etapie 202 dały też przekroczenia $1/4$, wspólnie $0{,}263520$.
+Nie wolno selekcjonować jedynie pomiarów bliskich $1/4$.
+
+\section{Ruchomy Czybyszew i trzy różne osie}
+Aby zapis był samodzielny, definiujemy sześciotorowy geometryczny iloczyn
+(wersję znormalizowaną ruchomego dwumianu)
+\[
+ B_6(A,h)=\left[\prod_{c\in\HH}\prod_{j=0}^{h-1}
+ \frac{30(A+h+j)+c}{30(A+j)+c}\right]^{1/6}.
+\]
+Całkując $1/t$ w każdym czynniku, otrzymujemy (również w nieco luźniejszej
+postaci używanej wcześniej)
+\begin{equation}\label{eq:cheb}
+ \frac{h^2}{A+2h+109/30}\le\log B_6(A,h)\le\frac{h^2}{A+11/30}.
+\end{equation}
+Istotnie każdy logarytm ma postać $\int_0^h (A+j+c/30+t)^{-1}\,dt$;
+wszystkie mianowniki mieszczą się między krańcami w \eqref{eq:cheb}.
+Dla $h=\lfloor\sqrt A\rfloor$ mamy $B_6\to e<4$. Dla $h\le\sqrt{A\log4}$
+również $B_6<4$. To czysta geometria, nie twierdzenie o pierwszych.
+Przewidywana pojemność
+$N_0(A,h)=60C_2 h/\log^2(30A)$ rośnie do nieskończoności dla
+$h\sim\sqrt A$; rzeczywista pojemność nie jest tym samym.
+\begin{center}
+\begin{tabular}{rrrrr}
+\toprule $A$&$h$&Średnia PP&$L/M$&$\sigma/\sqrt{N_0}$\\\midrule
+$10^9$&31622&2149,19&$-0{,}365057$&2,8783\\
+$10^{10}$&100000&5666,68&$-0{,}364788$&2,9574\\
+$10^{11}$&316227&15173,39&$-0{,}364083$&3,1249\\
+$10^{12}$&1000000&41134,13&$-0{,}363256$&2,2745\\
+$10^{13}$&3162277&112742,80&$-0{,}364070$&1,9580\\\bottomrule
+\end{tabular}
+\end{center}
+Etap 203: 780/780 ujemnych okien, 450349440 cykli. Wspólne dopasowanie
+$\alpha=0{,}197577$ na $Q_{\rm eff}=N_0^2$. Dla $h\sim\sqrt A$ hipoteza
+$\sigma\asymp\sqrt{N_0}$ oznacza $A^{1/4}/\log A$, czyli $Q_{\rm eff}^{1/4}$
+oraz wykładnik $1/8$ względem globalnego $Q\asymp A^2$. Gdy badamy cały blok
+$h\asymp A$, model reszty pierwiastkowej daje względem $Q$ wykładnik $1/4$.
+To trzy różne zmienne odniesienia. Dopasowanie z danych lokalnych nie dowodzi
+przedłużenia analitycznego ani położenia osobliwości. Model stałej 950 z
+etapu 198 ma błąd systematyczny (w $10^8$ reszta około $67415$), więc nie
+jest ustalonym członem głównym z błędem pierwiastkowym.
+
+\section{Wersja B1: dokładny podpisany ogon Möbiusa}\label{sec:B1}
+Tu pracujemy na zmiennej $n$ (lewe ramię), nie na indeksie $k$.
+Niech $X<n\le2X$, $a(n)=\log n$ dla $n\in\Pp$, $n\equiv5\pmod6$,
+a poza tym $a(n)=0$. Ustalmy $y=X^{0{,}49}$. Zdefiniujmy
+\[
+ \T(X)=\sum_{X<n\le2X}a(n)\mu^2(n+2)\Lambda(n+2),\qquad
+ J_\mu(X)=\sum_{X<n\le2X}a(n)\mu(n+2).
+\]
+$\T$ jest ważoną liczbą bliźniaków. Nie mylić $J_\mu$ z $J_I$ z
+lematu \ref{lem:sign}. Korzystając z tożsamości
+\[\Lambda(N)=-\sum_{d\mid N}\mu(d)\log d,\]
+otrzymujemy $\T=S_{\le y}+S_{>y}$. Po zamianie $e=(n+2)/d$ w dużym ogonie:
+\begin{align}
+ S_{\le y}&=-\sum_n a(n)\mu^2(n+2)\sum_{d\mid n+2,\ d\le y}\mu(d)\log d,\nonumber\\
+ S_{>y}&=\sum_{\substack{e<(2X+2)/y\\(e,6)=1}}\mu(e)
+ \sum_{\substack{X<n\le2X\\n+2>ey\\e\mid n+2}}
+ a(n)\mu(n+2)\log\frac e{n+2}.\label{eq:large}
+\end{align}
+Użyto $\mu^2(N)\mu(d)=\mu(N)\mu(N/d)$ dla $d\mid N$; gdy $N$ nie jest
+bezkwadratowa, obie strony są zerowe. Nie usuwamy ruchomej granicy $ey$.
+
+\subsection{Człon mały: adaptacja lematu Murty'ego--Vatwani}
+\begin{lem}\label{lem:small}
+Bezwarunkowo $S_{\le y}=2C_2X+o(X)$.
+\end{lem}
+\begin{proof}[Uzasadnienie analityczne]
+Stosujemy argument lematu 3.4 Murty'ego--Vatwani \cite{mv} z poziomem
+$X^{0{,}49}$, zastępując ich warunek dystrybucyjny przez klasyczne BV.
+Dla przejrzystości podajemy dostosowanie stałych. Rozwinąć
+$\mu^2(n+2)=\sum_{b^2\mid n+2}\mu(b)$. Dla $b\le(\log X)^B$ moduł
+$6[d,b^2]\ll X^{0{,}49}(\log X)^{2B}$ pozostaje w zakresie BV.
+Waga $\log d$ i krotność po krótkim $b$ kosztują tylko potęgi logarytmu:
+przy ustalonym $b$ i module możliwe $d$ dzielące go różnią się wyłącznie
+dzielnikami $b$, a ich liczba jest $\le b$. Przy $b>Z=(\log X)^B$,
+$d,b$ bezkwadratowe, oznaczając $g=(d,b)$, $d=gd'$, $b=gb'$,
+$[d,b^2]=d'b'^2g^2$, błąd bezwzględny wynosi
+\[
+ \ll X\log^2X\sum_{gb'>Z}\frac{1}{g^2b'^2}
+       \sum_{d'\le 3X}\frac1{d'}\ll X\frac{\log^4X}{Z}.
+\]
+W nierówności użyto $X/q+1\ll X/q$ dla $q\le3X$; większy moduł nie daje
+żadnego dzielnika $n+2$. Analogiczny ogon członu głównego z $1/\varphi(q)$
+jest zaniedbywalny po powiększeniu $B$, stosując $q/\varphi(q)\ll\log\log(q+3)$
+i zbieżne sumy dla $g,b'$. Potęgi pierwszych można usunąć z BV ze stratą
+$o(X)$ (liczba potęg $O(\sqrt X\log X)$, wagi dzielnikowe $X^{o(1)}$).
+
+Dla $p\ge5$ lokalna bezkwadratowość na pierwszych w klasie 5 modulo 6 ma
+czynnik $A_p=1-1/[p(p-1)]$. Jeśli $p\mid d$, warunek $p\mid n+2$ oraz
+$p^2\nmid n+2$ ma gęstość $1/(p-1)-1/[p(p-1)]=1/p$.
+Niech $A_* =\prod_{p\ge5} A_p$, $g_p=1/(pA_p)$. Odpowiedni szereg
+$\prod_{p\ge5}(1-g_p p^{-s})=H(s)/\zeta(1+s)$ ma w $s=0$ pochodną
+$H(0)$. Zbieżność ważonych sum Möbiusa przy $s=0$ wynika z PNT
+(lub argumentu tauberowskiego w \cite{mv}). Stała członu małego wynosi
+\[
+ \frac12 A_* H(0)=\frac12\cdot3\prod_{p\ge5}
+ \frac{A_p-1/p}{1-1/p}=
+ \frac32\prod_{p\ge5}\left(1-\frac1{(p-1)^2}\right)=2C_2.
+\]
+Współczynnik $1/2$ pochodzi z progresji modulo 6, a czynnik 3 z usunięcia
+pierwszych 2 i 3 w $\zeta(1+s)^{-1}$.
+\end{proof}
+
+\subsection{Człon duży i reszta podpisana}
+Wprowadźmy $\Delta_e(n)=\one_{e\mid n+2}-1/\varphi(e)$ i
+\begin{equation}\label{eq:R}
+ \R(X)=\sum_{\substack{e<(2X+2)/y\\(e,6)=1}}\mu(e)
+ \sum_{\substack{X<n\le2X\\n+2>ey}}a(n)\mu(n+2)\Delta_e(n)
+       \log\frac e{n+2}.
+\end{equation}
+Na $n=6m-1$ jest to dokładnie $\one_{m\equiv-6^{-1}\ (e)}-1/\varphi(e)$,
+nie niezważony teleskop \eqref{eq:tel}. Funkcja główna szeregu
+$\sum_{(e,6)=1}\mu(e)/(\varphi(e)e^s)=H_0(s)/\zeta(1+s)$ ma
+$H_0(0)=4C_2$. Standardowe oszacowania PNT dla sum Möbiusa (splot z
+absolutnie zbieżnym szeregiem $H_0$) dają dla każdego ustalonego $B>0$
+\[
+ \sum_{e\le E,(e,6)=1}\frac{\mu(e)}{\varphi(e)}=O_B((\log E)^{-B}),\qquad
+ \sum_{e\le E,(e,6)=1}\frac{\mu(e)\log e}{\varphi(e)}=-4C_2+o(1).
+\]
+Pierwsze oszacowanie kompensuje mnożnik $\log(n+2)$. Z $E=(n+2)/y\asymp
+X^{0{,}51}$, jednostajnie po $n\in(X,2X]$, dostajemy
+$S_{>y}=-4C_2J_\mu(X)+\R(X)+o(X)$. Zatem
+\begin{equation}\label{eq:B1exact}
+ \boxed{\T(X)=4C_2\bigl(X/2-J_\mu(X)\bigr)+\R(X)+o(X).}
+\end{equation}
+Dla $e<X$ oraz $n>X$ pierwszej, $(n,e)=1$; dla $(e,6)=1$ również $(-2,e)=1$.
+Ortogonalność charakterów wyraża $\Delta_e$ jako
+$\varphi(e)^{-1}\sum_{\chi\ne\chi_0}\overline{\chi(-2)}\chi(n)$.
+Nie daje to oszacowania sumy przesuniętego Möbiusa.
+
+\subsection{Rezerwa dodatnia i B1}
+Ponieważ $\mu(n+2)\le1$, a dla $25\mid n+2$ jest zerem, PNT w jednej
+zredukowanej klasie modulo 150 daje
+$J_\mu(X)\le X/2-X/40+o(X)$. Stąd
+\begin{equation}\label{eq:reserve}
+ \T(X)\ge\delta_0 X+\R(X)+o(X),\qquad\delta_0=C_2/10>0.
+\end{equation}
+\begin{tw}[Redukcja B1]\label{th:B1}
+Jeżeli dla nieograniczonego ciągu $X$ zachodzi
+\[
+ \boxed{\R(X)\ge-(C_2/20)X,}
+\]
+to $\T(X)>0$ dla dostatecznie dużych wyrazów tego ciągu i istnieje
+nieskończenie wiele bliźniaków. Co więcej, na tych skalach ich liczba jest
+$\gg X/\log^2 X$.
+\end{tw}
+\begin{proof} Z \eqref{eq:reserve} pozostaje $C_2X/20+o(X)$. Każda para
+wnosi co najwyżej $\log^2(2X+2)$. Nieograniczone skale wymuszają nieskończoność.
+\end{proof}
+Dołączenie kwadratów $7^2,11^2$ zwiększa rezerwę do
+$\delta_*=2C_2(1-(19/20)(41/42)(109/110))\simeq0{,}107$.
+Jest to dolna granica rezerwy, nie granica samej reszty.
+Podział $\R=\sum_{j=1}^K\R_j$, $K\asymp\sqrt X$, daje
+$|\R|^2\le K\sum|\R_j|^2$. Wystarczy $\sum|\R_j|^2\ll X^{3/2-\eta}$.
+Pomiary $L$ nie są pomiarami $\R_j$.
+
+\section{Dwumian Newtona, zeta i właściwy znak (205--208)}
+Rys. 1.3 w notatkach \cite{dupuy} przedstawia
+$\binom{20}{10}=2^2\cdot11\cdot13\cdot17\cdot19=184756$ jako ilustrację
+formuły iloczynowej (podzielność versus rozmiar); rys. 1.4 przedstawia
+$G_\zeta(x)$ do 2000 i znormalizowane fluktuacje do $10^7$. Same wykresy
+nie dowodzą RH. Praca Alpögego ogłoszona 20 XI 2026 jest źródłem inspiracji,
+nie przesłanką w tym opracowaniu (por. \cite{rub}). Nie ustaliliśmy, czy
+wskazany dwumian pełni w formalizacji rolę parametru optymalizacji.
+
+Dla różnic $\Delta^r L_j=\sum_{i=0}^r(-1)^i\binom ri L_{j+i}$ zachodzi
+$\sum_i\binom ri^2=\binom{2r}r$. Zatem znormalizowana energia to
+\[
+ \sigma_r^2=\binom{2r}r^{-1}\operatorname{mean}|\Delta^r L_j|^2.
+\]
+Wielomian $(1-z)^r$ ma zero rzędu $r$ przy $z=1$ i
+$|(1-e^{i\theta})^r|^2=4^r\sin^{2r}(\theta/2)$. Jest to filtr częstotliwości,
+nie informacja o zerach dzeta. Test etapu 206 dał m.in. dla $r=3$ brak
+osobnego pomiaru, dla $r=4$ wykładniki $0{,}221470/0{,}194560$, dla $r=10$
+$0{,}214378/0{,}189515$ (rozłączne/ruchome okna). Mała energia różnic usuwa
+również stały błąd systematyczny; nie rozpoznaje znaku.
+
+\subsection{Szereg Dirichleta i wygładzenie}
+Dla punktowego $\ell(k)$ z lematu \ref{lem:sign} definiujemy
+$F_L(s)=\sum_{k\ge1}\ell(k)k^{-s}$, $\Re s>1$.
+Górne sito Selberga w wymiarze 3 zastosowane na $[A,2A)$ przy płytkim
+stałopotęgowym progu (mniejszym niż rzeczywisty próg) daje
+\begin{equation}\label{eq:upper}
+ \sum_{A\le k<2A}|\ell(k)|\ll A/\log^3 A.
+\end{equation}
+Stąd $F_L(1),F'_L(1)$ są bezwzględnie zbieżne, dla $F''_L(1)$ nie ma
+takiej gwarancji. Dla $G_L(x)=\sum_{k\le x}\ell(k)(x/k-1)$ dokładnie
+$\int_1^\infty G_L(x)x^{-s-1}dx=F_L(s)/(s(s-1))$ dla $\Re s>1$.
+Przeskalowanie $F_L(2s)$ jest dokładne dla $Q=k^2$; dla rzeczywistego
+iloczynu $LR=(30k+c)^2-1$ występuje przesunięcie i skala, więc nie jest to
+dosłowna tożsamość. Nie znamy przedłużenia meromorficznego $F_L$ ani jego
+iloczynu Eulera; osobliwości nie są zerami $\zeta$.
+
+\subsection{Dodatnie jądro Newtona}
+\begin{defn}
+Dla całkowitych $a\ge1,r\ge3$ i $u>0$ definiujemy
+\begin{equation}\label{eq:kernel}
+ P_{a,r}(t)=t^a(1-t)^r,\quad
+ \B_{a,r}(u)=\sum_{k\ge1}\frac{\ell(k)}{k}P_{a,r}(k^{-u})
+ =\sum_{j=0}^r(-1)^j\binom rj F_L(1+(a+j)u).
+\end{equation}
+\end{defn}
+Jądro jest nieujemne na $[0,1]$, ma zero rzędu $a$ przy 0 i $r$ przy 1.
+To istotna różnica względem odejmowania kolejnych okien. W szczególności
+\begin{tw}[Kryterium znaku]\label{th:kernel}
+Dla dowolnych ustalonych $a\ge1,r>2$, jeżeli
+\[
+ \boxed{\liminf_{u\downarrow0}\frac{\B_{a,r}(u)}{u^2}<0,}
+\]
+to bliźniaków jest nieskończenie wiele.
+\end{tw}
+\begin{proof}
+Gdyby bliźniaków było skończenie wiele, istniałby $K_0$ taki, że
+$\ell(k)\ge0$ dla $k>K_0$. Ponieważ $1-k^{-u}\le u\log k$, mamy
+\[
+ \B_{a,r}(u)\ge -u^r\sum_{k\le K_0}\frac{|\ell(k)|}{k}(\log k)^r.
+\]
+Po podzieleniu przez $u^2$ prawa strona dąży do zera. Sprzeczność.
+\end{proof}
+Jest to elementarna zasada znaku typu Landaua, nie wymaga twierdzenia
+Landaua o przedłużeniu szeregu. Ma również wersję: wystarczy, żeby
+$\B_{a,r}(u)/u^r$ było nieograniczone od dołu (dla ustalonych parametrów).
+Nie wystarczy skończona liczba ujemnych wartości.
+
+\begin{lem}[Bezwarunkowy rząd operatora]
+Dla $a\ge1,r>2$ zachodzi $|\B_{a,r}(u)|\ll_{a,r}u^2$ przy $u\downarrow0$.
+Wkład zakresu $u\log k\le b<1$ jest $O_{a,r}(u^2b^{r-2}+u^r)$.
+\end{lem}
+\begin{proof}
+Z \eqref{eq:upper}, w bloku $2^j\le k<2^{j+1}$ ważona masa $\sum|\ell|/k$
+jest $O(j^{-3})$. Waga jądra jest ograniczona przez
+$e^{-a u j\log2}\min(1,(u(j+1)\log2)^r)$. Sumujemy $j\le1/u$ i $j>1/u$.
+Pierwsza suma to $O(u^r\sum_{j\le1/u}j^{r-3})=O(u^2)$, druga $O(u^2)$.
+Dla odcięcia $b$ zastępujemy $1/u$ przez $b/(u\log2)$ i uwzględniamy
+skończony zakres początkowy. Dowód daje ograniczenie rozmiaru, nie znak.
+\end{proof}
+Przy \emph{hipotetycznej} asymptotyce
+$\sum_{k\le A}\ell(k)\sim-\kappa A/\log^3 A$ otrzymujemy przez sumowanie
+częściami i podstawienie $v=u\log k$:
+\[
+ \B_{a,r}(u)\sim-\kappa u^2 I_{a,r},\quad
+ I_{a,r}=\int_0^\infty e^{-av}(1-e^{-v})^r\frac{dv}{v^3}>0.
+\]
+Dla $a=1$ całkowanie przez części dwukrotnie daje
+$I_{1,r}=-\frac12\sum_{j=0}^r(-1)^j\binom rj(j+1)^2\log(j+1)$.
+\begin{center}
+\begin{tabular}{rrrr}
+\toprule $r$&$\binom{2r}r$&$I_{1,r}$&mediana $v$ (model)\\\midrule
+3&20&0,417972075299&0,294351\\4&70&0,126091300851&0,619178\\
+10&184756&0,008867568390&1,693490\\\bottomrule
+\end{tabular}
+\end{center}
+Mniejszy $r$ daje większą całkę, większy $r$ silniej odcina początek.
+Wszystkie trzy spełniają kryterium \ref{th:kernel}, jeśli znak zostanie
+udowodniony. Wyboru nie można uzasadnić samym podobieństwem do wykresów RH.
+
+\section{Lokalizacja dodatnim wielomianem: audyt etapu 209}\label{sec:cert}
+W tym etapie \emph{punktowy} próg $z(k)$ zastosowano dla każdego $k$,
+$1\le k\le10^8$. Generator C++ stosuje niezależne maski: pierwszość
+przez skreślenia od $p^2$, roughness od pierwszego $k$ z $p^3\le30k+31$.
+Dla $p\le5$ wszystkie ramiona są względnie pierwsze z $p$. Tablica 64 na 64
+oblicza moment z masek. Ponowne uruchomienie generatora w audycie dało
+\textbf{identyczny bajt w bajt} plik \texttt{ell.bin}. SHA-256:
+\begin{center}\small\texttt{244fb7963919bb2bb20acf2981d2be9b1a24729192229480135ac6bc91aa624c}\end{center}
+Długość: 100000000 bajtów ze znakiem. Suma do $10^7$: $-1555800$;
+po $10^7$: $-9242518$; razem $-10798318$. Zakres wartości $[-24,24]$,
+wartości parzyste. Współczynniki są dokładne dla podanej definicji, nie
+heurystyczne. Niezależna faktoryzacja 1500 cykli (200 początkowych i 1300 wylosowanych) również potwierdziła wszystkie wartości. Właściwa kontrola znaku całej sumy nadal wymaga ogona.
+
+\subsection{Porównanie rzędów (zapisane pomiary)}
+Dla $Z_r=\B_{1,r}/(I_{1,r}u^2)$, $u=0{,}1$:
+\begin{center}
+\begin{tabular}{rrr}
+\toprule $r$&$Z_r$ do $10^8$&tylko $k>10^7$\\\midrule
+3&$-158{,}636$&$-5{,}947$\\4&$-260{,}051$&$-16{,}171$\\
+6&$-329{,}223$&$-40{,}206$\\8&$-317{,}358$&$-59{,}588$\\
+10&$-277{,}654$&$-70{,}385$\\12&$-231{,}106$&$-73{,}205$\\
+16&$-147{,}473$&$-63{,}696$\\20&$-88{,}378$&$-46{,}871$\\\bottomrule
+\end{tabular}
+\end{center}
+Dla 24 kombinacji $r$ i $u\in\{0{,}05,0{,}1,0{,}2\}$ zapisano ujemność
+części skończonej; nie oznacza to znaku pełnej sumy. W celu skupienia masy
+na $10^7$--$10^8$ wybrano $u=1/20$, $v_0=u\log 10^{7{,}5}$ i
+$a\simeq r/(e^{v_0}-1)-3/v_0$ (zaokrąglenie do dodatniej liczby całkowitej).
+Jest to warunek stacjonarności logarytmu modelowego jądra
+$e^{-av}(1-e^{-v})^r/v^3$, a nie dopasowywanie znaku.
+\begin{center}
+\begin{tabular}{rrrrr}
+\toprule $r$&$a$&masa modelowa w bloku (\%)&$Z$ skończone&koszt ogona\\\midrule
+320&230&74,9843&$-478{,}329$&34390,380\\
+640&463&89,6523&$-523{,}934$&12132,056\\
+1280&930&97,8894&$-550{,}957$&2240,744\\
+2560&1863&99,8872&$-557{,}684$&123,719\\
+5120&3730&99,9996&$-558{,}100$&0,515\\\bottomrule
+\end{tabular}
+\end{center}
+Normalizacja $Z=\B_{a,r}/(I_{a,r}u^2)$. Procenty są rozkładem modelowej
+masy, nie rozkładem rzeczywistych znaków. W pierwotnym teście kwadratura
+oraz część skończona były zmiennoprzecinkowe.
+
+\subsection{Ścisła kontrola całego nieskończonego ogona}
+Dla $N\ge1$ niech $v_N=u\log N$, $f(v)=e^{-av}(1-e^{-v})^r$ i
+$D=a-r/(e^{v_N}-1)$. Jeśli $D>0$, logarytmiczna pochodna $f$ dla $v\ge v_N$
+wynosi $-a+r/(e^v-1)\le-D$. Ponadto $x^{-1}f(u\log x)$ jest malejąca
+na $[N,\infty)$. Z kryterium całkowego i $|\ell(k)|\le24$ otrzymujemy
+\begin{equation}\label{eq:tail}
+ \left|\sum_{k>N}\frac{\ell(k)}k P_{a,r}(k^{-u})\right|
+ \le\frac{24}{u}\int_{v_N}^\infty f(v)\,dv
+ \le\frac{24 f(v_N)}{uD}.
+\end{equation}
+To ograniczenie jest bezwarunkowe i obejmuje wszystkie dalsze liczby.
+Nie wymaga przewidywania ich pierwszości.
+
+\subsection{Nowy certyfikat z zaokrągleniem skierowanym}
+Ustalamy $a=3730$, $r=5120$, $u=1/20$, $N=10^8$. Zamiast numerycznej
+całki $I$ stosujemy prosty dodatni czynnik skali $S=10^{2619}$.
+Dla $t=k^{-1/20}$ waga jednego wyrazu (bez $\ell(k)$) wynosi
+$g(t)=t^{3750}(1-t)^{5120}$. Funkcja ma jeden punkt maksimum
+$t_*=3750/8870$. Dla każdego bloku po 100000 cykli odczytujemy dokładne
+całkowite sumy dodatnich i ujemnych współczynników $P_b,N_b\ge0$.
+Jeżeli $w_b^-\le Sg(t)\le w_b^+$ na tym bloku, wtedy
+\[
+ S\sum_{k\in b}\frac{\ell(k)}k P_{a,r}(k^{-1/20})
+ \le P_bw_b^+-N_bw_b^-.
+\]
+Przedziały dla $t$ wyznaczamy bez logarytmów: dla $D_0=10^{30}$
+znajdujemy całkowite $j$ takie, że $kj^{20}\le D_0^{20}<k(j+1)^{20}$,
+stąd $j/D_0\le t\le(j+1)/D_0$. Używamy minimum i maksimum na końcach
+bloku, z uwzględnieniem $t_*$, gdy maksimum leży wewnątrz. Potęgi całkowite
+liczymy mnożeniami w Decimal z kierunkiem zaokrąglenia ku dołowi lub górze.
+Ogon \eqref{eq:tail} ma tu postać $480 f(v_N)/D$; w mianowniku stosujemy
+dolny wymierny kres $D=a-r t_N/(1-t_N)$, a w liczniku górny kres.
+
+\begin{center}
+\begin{tabular}{lr}
+\toprule Składnik (skala $10^{2619}$)&Kres górny\\\midrule
+Skończona suma&$-20{,}5147209$\\
+Bezwzględny koszt ogona&$0{,}0192070$\\\midrule
+Pełna suma&$-20{,}4955139$\\\bottomrule
+\end{tabular}
+\end{center}
+\begin{tw}[Certyfikat dla ustalonych parametrów]
+Z danych odtworzonych przez generator i powyższych nierówności:
+\[
+ \boxed{10^{2619}\B_{3730,5120}(1/20)<-20{,}49.}
+\]
+\end{tw}
+Plik \texttt{certyfikat.py} wykonuje rachunek przedziałowy; wynik zapisano
+w \texttt{certyfikat\_wynik.txt}. Jest to certyfikat programistyczny,
+nie dowód sprawdzony przez kernel Lean. W szczególności Lean nie przelicza
+100 mln współczynników. Ujemność ustalonego $u$ potwierdza tylko istnienie
+jakichś ujemnych współczynników (a zatem par). Jeżeli przedłużymy dowolny
+skończony zapis przez same zera, wszystkie jego skończone znaki mogą pozostać
+ujemne, lecz $\B_{a,r}(u)/u^2\to0$. Żaden wybór rzędu nie usuwa tej przeszkody.
+
+\section{Nowa synteza: B1 wygładzone tym samym jądrem}\label{sec:smooth}
+Wcześniejsza praca zawierała dwie poprawne, lecz różne redukcje:
+ujemność momentu $L$ i jednostronną resztę Möbiusa B1. Nie ma udowodnionej
+tożsamości $L=\R$; to różne wagi arytmetyczne. Można jednak połączyć
+\emph{samą redukcję B1} z dodatnim jądrem Newtona, bez takiej tożsamości.
+Jest to wspólny cel analityczny całego programu.
+
+Niech $X_j=2^j$, $j\ge1$, oraz
+\[
+ \tau_j=\T(X_j)/X_j,\qquad r_j=\R(X_j)/X_j,\qquad
+ b_j=4C_2(1/2-J_\mu(X_j)/X_j).
+\]
+Z \eqref{eq:B1exact}, \eqref{eq:reserve} mamy
+$\tau_j=b_j+r_j+\epsilon_j$, $\epsilon_j\to0$, $b_j\ge\delta_0+o(1)$.
+Sito górne dla bliźniaków zapewnia $\tau_j=O(1)$, a więc także $r_j=O(1)$.
+Wybieramy te same dodatnie jądra co wyżej, lecz na osi indeksu dyadycznego:
+\begin{equation}\label{eq:Wj}
+ W_j(u)=j^{-3}e^{-au j}(1-e^{-u j})^r,\qquad
+ W(u)=\sum_{j\ge1}W_j(u),\quad a\ge1,\ r>2.
+\end{equation}
+\begin{lem}
+$W(u)\sim I_{a,r}u^2$ i dla każdego ustalonego $J$,
+$\sum_{j\le J}W_j(u)=O_{J,r}(u^r)=o(W(u))$.
+Jeżeli $e_j\to0$, to $\sum_j e_jW_j(u)=o(W(u))$.
+\end{lem}
+\begin{proof}
+Podstawienie $v=uj$ daje $W(u)=u^2[u\sum_{j\ge1}f(uj)/(uj)^3]$;
+wyrażenie w nawiasie jest sumą Riemanna zbieżną do $I_{a,r}$.
+Zbieżność przy zerze wynika z $r>2$, przy nieskończoności z $a>0$.
+Dla ustalonego $j$ mamy $1-e^{-uj}\le uj$. Ostatni wniosek wynika przez
+podział na skończony początek i ogon, gdzie $|e_j|$ jest dowolnie małe.
+\end{proof}
+\begin{tw}[Główny lemat redukcyjny: B1--Newton]\label{th:B1N}
+Wystarczy udowodnić dla jednego ustalonego $a\ge1,r>2$:
+\begin{equation}\label{eq:B1N}
+ \boxed{\limsup_{u\downarrow0}
+ \frac{\sum_{j\ge1}W_j(u)\R(2^j)/2^j}{\sum_{j\ge1}W_j(u)}>-\delta_0,
+ \qquad \delta_0=C_2/10.}
+\end{equation}
+Wtedy istnieje nieskończenie wiele bliźniaków.
+\end{tw}
+\begin{proof}
+Pomnożenie $\tau_j\ge\delta_0+r_j+o(1)$ przez nieujemne $W_j$ i sumowanie
+po $j$ daje
+\[
+ \frac{\sum_j W_j\tau_j}{W(u)}\ge\delta_0+
+ \frac{\sum_j W_j r_j}{W(u)}+o(1).
+\]
+Jeżeli zachodzi \eqref{eq:B1N}, prawa strona jest dodatnia i oddzielona
+od zera wzdłuż ciągu $u\downarrow0$. Przy skończenie wielu bliźniakach
+$\tau_j=0$ poza skończonym zbiorem, a ich średnia ważona dąży do zera.
+Sprzeczność.
+\end{proof}
+Ta wersja nie wymaga małości każdej lokalnej rozbieżności, tylko jednostronnej
+średniej podpisanej. Jest kompatybilna z filtrem Newtona, z CRT v10
+($\Delta_e$), z naturalnym dzieleniem bloków na okna Czybyszewa i
+z pierwotnym B1. Można zwiększyć $\delta_0$ do $\delta_*$ po uwzględnieniu
+kolejnych kwadratów. Nie twierdzimy, że \eqref{eq:B1N} wynika z pomiaru
+$\B_{3730,5120}(1/20)$: ten ostatni dotyczy $\ell(k)$, nie $r_j$.
+Nie twierdzimy też, że punktowe B1 na dowolnym rzadkim ciągu implikuje
+\eqref{eq:B1N}; oba są osobnymi warunkami wystarczającymi. B1 wymusza ilościową dolną granicę rzędu $X/\log^2 X$, podczas gdy kryterium znaku momentu $L$ może dać nieskończoność przy słabszej masie; nie są równoważne.
+
+\section{Plan dalszych badań: wyłącznie właściwa bariera}
+Przedmiotem dalszej analizy powinien być wyraz $\R(X)$ z \eqref{eq:R}
+(z wagami, ruchomą granicą i centrowaniem), a nie ponowne liczenie zwykłych
+bliźniaków. Docelowy warunek to B1 albo jego wersja \eqref{eq:B1N}.
+Wspólne dzielniki $e\mid n+2$ oznaczają dokładnie prawe klasy CRT. Z wcześniejszych
+etapów należy zachować metody Kloostermana, biliniowe przełączanie
+czynników, dyspersję oraz signed energy jako potencjalne narzędzia; nie
+uznano żadnej z nich za pełne oszacowanie dla wszystkich zakresów.
+Również duże czynniki środka $C_m$ i równania norm są narzędziami
+pomocniczymi, nie koniecznymi elementami redukcji.
+
+Trzy sprawdzalne zadania: (1) rozkład $\R$ na bloki czynników z dokładnym
+zachowaniem znaków i granic; (2) oszacowanie jednostronnej sumy bloków,
+których nie pokrywa BV ani klasyczna dyspersja; (3) zbadanie dodatniego
+jądra \eqref{eq:Wj} bez przenoszenia błędu z $L$ na $\R$ bez dowodu.
+Jeżeli połączony lemat zostanie udowodniony, twierdzenie \ref{th:B1N}
+kończy dowód. Bez niego pozostaje bariera parzystości. Oś $1/4$, zmiana
+parametrów i dalsze testy nie stanowią samodzielnego przełamania bariery.
+
+\appendix
+\section{Pakiet reprodukcji i Lean}
+W archiwum: niniejsze źródło LaTeX i PDF, \texttt{AudytRK.lean},
+\texttt{certyfikat.py}, \texttt{audyt\_danych.py}, raporty, dane i kody z etapów 193,
+197, 199--203 i 209 oraz wcześniejszy tekst 140--144 (źródło odniesienia).
+Zasadniczy generator i certyfikat uruchamia się następująco (Linux/WSL):
+\begin{verbatim}
+g++ -O3 -fopenmp dane/etap209/test.cpp -o rk209
+./rk209 100000000 ell.bin 2> bloki.csv
+python certyfikat.py ell.bin
+python audyt_danych.py dane
+sha256sum ell.bin
+\end{verbatim}
+Wymagany Python z NumPy; poprzednie analizy używają także SciPy i pandas.
+W projekcie Lean z Mathlib: \texttt{lake env lean AudytRK.lean}.
+Plik Lean nie był uruchomiony w środowisku przygotowania (brak Lean/Mathlib).
+Nie dodano deklaracji nowych aksjomatów ani świadomych luk \texttt{sorry}.
+Przesłanki analityczne są argumentami twierdzeń, a nie udowodnionymi lematami.
+Do sprawdzenia: składnia, użyte nazwy lematów bibliotecznych i komunikaty
+\texttt{\#print axioms}. Rdzeń Lean obejmuje algebraiczny fundament,
+momenty, rzeczywistą implikację $\ell(k)<0\Rightarrow$ pełny pierwszy tor,
+obliczenia wymierne, teleskop, dodatnie jądra i logiczną implikację
+z odpowiednio silnego znaku. Formalizacja pełnej analizy BV, szeregu
+Möbiusa, asymptotycznej sumy Riemanna i obliczeń zewnętrznych nie została
+wykonana. Plik nie jest formalnym dowodem hipotezy bliźniaczej.
+
+\begin{thebibliography}{9}
+\bibitem{mv} M. R. Murty, A. Vatwani, \emph{Twin primes and the parity problem},
+Journal of Number Theory 180 (2017), 643--659, zwł. lematy 3.4, 4.4.
+\url{https://mrammurty-ai.github.io/TwinPrimes-Parity.pdf}.
+\bibitem{taosieve} T. Tao, \emph{254A, Notes 4: Some sieve theory}, 2015.
+\url{https://terrytao.wordpress.com/2015/01/21/254a-notes-4-some-sieve-theory/}.
+\bibitem{tt} T. Tao, J. Teräväinen, \emph{The structure of correlations of
+multiplicative functions at almost all scales, with applications to the
+Chowla and Elliott conjectures}, arXiv:1809.02518.
+\url{https://arxiv.org/abs/1809.02518}.
+\bibitem{dupuy} Notatki o ogłoszonej formalizacji Alpögego--Claude,
+wersja dostępna u T. Dupuy, 21 XI 2026, rozdz. 1, rys. 1.3--1.4.
+\url{https://tdupu.github.io/riemann-public/riemann-book.pdf}.
+\bibitem{rub} M. Rubinstein, \emph{The Alpöge--Claude proof of the Riemann
+hypothesis explained for the Riemann zeta function}, working draft v2,
+22 XI 2026. \url{https://math.uwaterloo.ca/~mrubinst/alpoge_claude_grh/zeta-paper_v2.pdf}.
+\end{thebibliography}
+\end{document}

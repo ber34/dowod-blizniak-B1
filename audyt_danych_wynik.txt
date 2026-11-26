@@ -1,0 +1,11 @@
+CRT 25/17: OK
+pełny okres: 4 19255 2589 16666
+pełny okres: 6 19179 2489 16690
+pełny okres: 0 19017 2457 16560
+10^33: wszystkie zapisane pary i C zgodne z SymPy {6: 2354, 0: 2257, 4: 2266} {6: 41, 0: 60, 4: 49}
+kontrmodel: OK 1000000 [293744, 34379, 2064] ; wszystkie 64 maski sita odtworzone
+etap199 sumaryczne L: [-874, -5046, -29664, -186108, -1270646, -9074712]
+etap200 sumaryczne L: [-13467164, -10259564, -7968534, -6319490]
+etap203 sumaryczne L: [-382694, -922092, -2268736, -5685658, -4844704]
+etap203: 780 okien, tożsamości OK
+etap209: 1500 cykli niezależna faktoryzacja OK; SHA256 244fb7963919bb2bb20acf2981d2be9b1a24729192229480135ac6bc91aa624c

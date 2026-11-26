@@ -1,0 +1,169 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[polish]{babel}
+\usepackage{lmodern,amsmath,amssymb,amsthm,booktabs,geometry,microtype,hyperref}
+\geometry{margin=24mm}
+\hypersetup{colorlinks=true,linkcolor=black,urlcolor=blue}
+\newtheorem{tw}{Twierdzenie}[section]
+\newtheorem{lem}[tw]{Lemat}
+\newcommand{\R}{\mathcal R}
+\newcommand{\T}{\mathcal T}
+\newcommand{\one}{\mathbf 1}
+\newcommand{\PP}{\mathbb P}
+\title{Reguła Krzyża, Newton i Czybyszew\\\large Wspólny bilans podpisany B1 -- wersja 1\\ Podsumowanie etapów 191--211 i audyt}
+\author{Adam Berger\\Opracowanie rachunkowe i audyt z pomocą ChatGPT}
+\date{26 listopada 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+Przedstawiamy jeden program badawczy: Reguła Krzyża rozdziela eliminatory i ich przecięcia, ruchomy Czybyszew ustala geometrię okien, dodatnie wielomiany Newtona lokalizują masę, a podpisana reszta CRT--Möbiusa B1 stanowi wspólny cel analityczny. Dowodzimy redukcji do jednostronnej średniej B1--Newton. Wykonujemy nowy test na 29\,738\,803 parach ramion i 2309 oknach. Trzy niskie rzędy Newtona zachowują dodatni diagnostyczny bilans na sześciu skalach; rząd 5120 daje jeden wyjątek. Wynik skończony nie rozstrzyga bariery parzystości. Dokument nie jest dowodem hipotezy bliźniaczej.
+\end{abstract}
+\tableofcontents
+\section{Fundament: Reguła Krzyża i przecięcie piątki}
+Niech $L(m)=6m-1$, $R(m)=6m+1$, $C(m)=12m^2-1$. Wówczas $LR=3C+2$. Dla $m\ge1$ liczba $LR$ ma dokładnie dwa czynniki pierwsze z krotnościami wtedy i tylko wtedy, gdy $L,R$ są pierwsze. Dla dowolnego $p>3$ pierwszego fazy $p\mid L$ i $p\mid R$ to odpowiednio $m\equiv\pm6^{-1}\pmod p$. Nie przecinają się, ponieważ $R-L=2$.
+
+Oryginalna tablica mnożenia nieparzystych klas modulo 10 ma postać:
+\begin{center}\begin{tabular}{c|rrrrr}\toprule
+$q$&$3q$&$5q$&$7q$&$9q$&$11q$\\\midrule
+1&3&5&7&9&1\\3&9&5&1&7&3\\5&5&5&5&5&5\\7&1&5&9&3&7\\9&7&5&3&1&9\\\bottomrule
+\end{tabular}\end{center}
+Dokładnie dziewięć komórek daje 5, w tym osiem z dokładnie jednym czynnikiem podzielnym przez 5 i jedna z dwoma. Każda z pozostałych czterech końcówek ma cztery komórki. Stąd $9=8+1$, $9/4=2{,}25$, a po odłożeniu przecięcia $8/4=2$. Jest to tożsamość dla wszystkich pełnych okresów tablicy, a nie twierdzenie o stosunku unikalnych liczb złożonych w sicie.
+
+Dla $d$ czynników generator liczby wystąpień klasy zerowej modulo $p$ jest
+\[
+ P_{p,d}(t)=(p-1+t)^d,\qquad [t^j]P_{p,d}=\binom dj(p-1)^{d-j}.
+\]
+Dla $p=5$ i $d=2$: $16+8t+t^2$. Dla każdego niezerowego produktu modulo $p$ istnieje $(p-1)^{d-1}$ konfiguracji, a z dokładnie jednym zerowym czynnikiem $d(p-1)^{d-1}$. Podstawienie $t=-1$ daje podpisany bilans $(p-2)^d$, znormalizowany przez $p^d$. Nie jest to bilans Möbiusa, ponieważ klasy czynników nie kontrolują liczby ich pozostałych dzielników pierwszych.
+
+Dla dwóch niezależnych klas modulo 25 otrzymujemy 400 iloczynów niepodzielnych przez 5, 160 o wartościowaniu $v_5=1$ oraz 65 o wartościowaniu co najmniej 2. Ogólnie dla modulo $p^2$ te liczby to $(p^2-p)^2$, $2(p-1)(p^2-p)$ oraz $p^4$ minus poprzednie dwie. Piątka jest najsilniejszym lokalnym eliminatorem spośród $p>3$, ale sam stosunek 2 zachodzi dla każdego $p$.
+\section{Rezerwa kwadratowa i deduplikacja}
+Definiujemy $a(n)=\log n$ dla $n$ pierwszej i $n\equiv5\pmod6$, poza tym zero. Dla $X<n\le2X$ masa $M=\sum a(n)=X/2+o(X)$ wynika z PNT w progresjach. Dla ustalonego $p>3$ po uwarunkowaniu na pierwszość $n$ względne masy zdarzeń $v_p(n+2)=0,1,\ge2$ wynoszą odpowiednio
+\[
+ \frac{p-2}{p-1},\quad\frac1p,\quad\frac1{p(p-1)}.
+\]
+W szczególności dla 5 są to $75\%,20\%,5\%$. Gdy $v_5(n+2)=1$, znak jest $-\mu((n+2)/5)$; gdy $25\mid n+2$, wkład Möbiusa jest zerowy. Przykład $n=83$ i $383$ (obie pierwsze, ta sama klasa modulo 150) daje $n+2=85=5\cdot17$ i $385=5\cdot7\cdot11$, czyli przeciwne znaki po usunięciu 5. Moduł nie rozstrzyga tego znaku.
+
+Niech $E=\{5,7,11,13,17,19,23,29\}$. Definiujemy unię $Z_E(n)=\one_{\exists p\in E:p^2\mid n+2}$. Każdy punkt można przypisać największemu $p\in E$ spełniającemu warunek; jest to rozłączna realizacja zasady większego eliminatora. Nie sumujemy osobnych mas przecinających się zbiorów. CRT dla ustalonego $E$ daje
+\[
+ \sum a(n)Z_E(n)=\frac X2\left[1-\prod_{p\in E}\left(1-\frac1{p(p-1)}\right)\right]+o(X).
+\]
+Niech $C_2=\prod_{p>2}(1-(p-1)^{-2})\simeq0{,}6601618158$ i
+\begin{equation}\label{eq:K}
+ K_E=2C_2\left[1-\prod_{p\in E}\left(1-\frac1{p(p-1)}\right)\right].
+\end{equation}
+\begin{center}\begin{tabular}{rr|rr}\toprule
+$p_{\max}$&$K_E$&$p_{\max}$&$K_E$\\\midrule
+5&0,066016182&17&0,119221694\\7&0,095880645&19&0,122733688\\11&0,107011945&23&0,125100467\\13&0,114789584&29&0,126572416\\\bottomrule\end{tabular}\end{center}
+Granica $K_\infty$ istnieje i jest około $0{,}13534$. Iloczyn do $10^6$ oraz oszacowanie ogona $\sum_{n>N}1/[n(n-1)]=1/N$ dają przybliżony przedział $[0{,}13534107,0{,}13534227]$ (rachunek zmiennoprzecinkowy). Wniosek: dodawanie kwadratów nie daje nieograniczonej rezerwy. W dowodzie najpierw ustalamy skończony $E$, a dopiero potem puszczamy $X\to\infty$.
+\section{Podpisana reszta B1: most między CRT i Möbiusem}
+Wszystkie sumy w tym rozdziale są po $X<n\le2X$, chyba że wskazano inaczej. Definiujemy $N=n+2$, $y=X^{0{,}49}$,
+\[
+ J=\sum_n a(n)\mu(N),\qquad \T=\sum_n a(n)\mu^2(N)\Lambda(N).
+\]
+$\T$ liczy tylko bliźniaki z wagą $\log n\log(n+2)$. Z tożsamości $\Lambda(N)=-\sum_{d\mid N}\mu(d)\log d$ oraz zamiany $e=N/d$ otrzymujemy dokładnie
+\begin{align*}
+ S&=-\sum_n a(n)\mu^2(N)\sum_{d\mid N,\ d\le y}\mu(d)\log d,\\
+ H&=\sum_n a(n)\mu(N)\sum_{\substack{e<N/y\\(e,6)=1}}\frac{\mu(e)}{\varphi(e)}\log(e/N),\\
+ \R&=\sum_n a(n)\mu(N)\sum_{\substack{e<N/y\\(e,6)=1}}\mu(e)\left(\one_{e\mid N}-\frac1{\varphi(e)}\right)\log(e/N),\\
+ \T&=S+H+\R.
+\end{align*}
+Ruchomy warunek $e<N/y$ jest zachowany. Dla $n=6m-1$, $e\mid N\iff m\equiv-6^{-1}\pmod e$. Jest to dokładna faza prawego ramienia. Nie utożsamiamy $\R$ z niezważonym bilansem eliminacji ani z momentem $L$ z rytmu 4--6--0.
+
+\paragraph{Asymptotyki klasyczne.} Wcześniejszy audyt (rozdz. 7, \cite{audit}) wyprowadza $S=2C_2X+o(X)$ przez rozwinięcie $\mu^2(N)=\sum_{b^2\mid N}\mu(b)$, odcięcie $b\le(\log X)^B$ i Bombieriego--Winogradowa dla modułów $6[d,b^2]\ll X^{0{,}49}(\log X)^{2B}$. Ogon $b>(\log X)^B$ jest $O(X\log^4X/(\log X)^B)$ po rozdzieleniu $(b,d)$; odpowiedni Eulerowski współczynnik to $\frac32\prod_{p\ge5}(1-(p-1)^{-2})=2C_2$. Dla $H$ używa się szeregu $\sum_{(e,6)=1}\mu(e)/(\varphi(e)e^s)=H_0(s)/\zeta(1+s)$, gdzie $H_0(0)=4C_2$. PNT i absolutna zbieżność czynnika $H_0$ w otoczeniu zera dają $\sum_{e\le t,(e,6)=1}\mu(e)/\varphi(e)=O_B(\log^{-B}t)$ oraz $\sum_{e\le t,(e,6)=1}\mu(e)\log e/\varphi(e)\to-4C_2$. Stąd jednostajnie w tym przedziale $H=-4C_2J+o(X)$. Szczegóły metody dzielnikowej: \cite{mv,audit}. Nie wymagamy RH ani EH w tej redukcji. Otrzymujemy
+\begin{equation}\label{eq:B1}
+ \boxed{\T(X)=4C_2(X/2-J(X))+\R(X)+o(X)\ \ge K_EX+\R(X)+o(X).}
+\end{equation}
+Nierówność wynika z $1-\mu(N)\ge Z_E(n)$, nie z przypuszczenia o kasowaniu Möbiusa. Dla samej 5: $K_5=C_2/10$. Dawna granica $-C_2/20$ zostawia połowę rezerwy; mianowniki 10 i 20 nie pochodzą z dwumianu Newtona. Dla pełnego $E$ wystarczy $\R(X)\ge-0{,}12X$ na nieograniczonym ciągu $X$. To warunek otwarty, nie wynik oszacowania CRT.
+\section{Czybyszew i Newton jako jeden operator}
+Dla ramion $6m\pm1$ definiujemy odpowiednik sześciotorowego $B_6$ z wcześniejszego audytu:
+\[
+ B_2(A,h)=\left[\prod_{c\in\{-1,1\}}\prod_{i=0}^{h-1}\frac{6(A+h+i)+c}{6(A+i)+c}\right]^{1/2}.
+\]
+Z całkowania $1/t$ w każdym czynniku wynika
+\[
+ \frac{h^2}{A+2h+1/6}\le\log B_2(A,h)\le\frac{h^2}{A-1/6}.
+\]
+Dla $h=\lfloor\sqrt A\rfloor$ mamy $B_2(A,h)\to e<4$. Przy podziale całego bloku na okna o stałym $h$ i kolejnych początkach $A_i\ge A$ zachodzi $B_2(A_i,h)<4$ dla każdego okna. Granica $e$ dotyczy pierwszego okna lub $A_i/A\to1$. Nie mylić indeksu $m$ z sześciotorowym indeksem $k$.
+
+Dodatnie jądro Newtona $P_{a,r}(t)=t^a(1-t)^r$ ($a>0$, $r>2$) ma rozwinięcie $\sum_{i=0}^r(-1)^i\binom ri t^{a+i}$, ale dla $t\in[0,1]$ nie odwraca znaku współczynników arytmetycznych. Dla symetrycznego przypadku $a=r$ normalizacja maksimum to $4^r$. Energia różnic rzędu $r$ ma dokładną normalizację $\sum_i\binom ri^2=\binom{2r}r$. Dla $r=3,4,10$ są to $20,70,184756$. To odrębna normalizacja od rezerwy B1.
+
+Dla $X_j=2^j$ rozdzielamy $\R(X_j)=\sum_i\R_{j,i}$ na rozłączne okna w zmiennej $m$ o długości około $\sqrt{X_j/6}$ (ostatnie okno może być krótsze). Używamy wspólnego progu $y=X_j^{0{,}49}$, aby podział był dokładnie addytywny. Na osi dyadycznej przyjmujemy
+\[
+ W_j(u)=\frac{e^{-auj}(1-e^{-uj})^r}{j^3},\qquad W(u)=\sum_{j\ge1}W_j(u).
+\]
+\begin{lem}Dla ustalonych $a>0,r>2$, $W(u)\sim u^2 I_{a,r}$, gdzie $I_{a,r}=\int_0^\infty e^{-av}(1-e^{-v})^r v^{-3}\,dv>0$. Wkład dowolnego skończonego zbioru $j$ jest $O(u^r)$, a ważona średnia ciągu zbieżnego do zera również dąży do zera.\end{lem}
+\begin{proof}Po podstawieniu $v=uj$ jest to suma Riemanna; całkowalność przy 0 wynika z $r>2$, przy nieskończoności z $a>0$. Dla ustalonego $j$, $1-e^{-uj}\le uj$. Dzieląc ciąg na skończony początek oraz ogon jednostajnie mały, otrzymujemy ostatni wniosek.\end{proof}
+\begin{tw}[Wspólna bariera RK--Newton--Czybyszew v1]\label{th:main}
+Dla jednego ustalonego $E,a,r$ wystarczy wykazać
+\begin{equation}\label{eq:main}
+ \boxed{\limsup_{u\downarrow0}\frac{\sum_{j\ge1}W_j(u)\left[K_E+2^{-j}\sum_i\R_{j,i}\right]}{W(u)}>0.}
+\end{equation}
+Wtedy istnieje nieskończenie wiele bliźniaków.\end{tw}
+\begin{proof}Z \eqref{eq:B1} wynika $\T(2^j)/2^j\ge K_E+\R(2^j)/2^j+o(1)$. Górne sito bliźniacze zapewnia $\T(2^j)/2^j=O(1)$, a stąd $\R(2^j)/2^j=O(1)$. Mnożymy przez $W_j\ge0$, sumujemy i dzielimy przez $W$. Lemat usuwa błąd $o(1)$. Gdy bliźniaków jest skończenie wiele, lewa strona ważonej nierówności dąży do zera, ponieważ pozostaje tylko skończenie wiele niezerowych bloków. Warunek \eqref{eq:main} daje sprzeczność.\end{proof}
+Twierdzenie jest redukcją, a warunek \eqref{eq:main} pozostaje do udowodnienia. Czybyszew zapewnia geometryczny podział, nie samodzielny zysk na reszcie. Aby mechanizm dawał nowy dowód, potrzebna jest dodatkowa kontrola jej podpisanej średniej. Przykładowo $\sum_i|\R_{j,i}|^2\ll X_j^{3/2-\eta}$ dla $\eta>0$ dawałoby przez Cauchy'ego $\R(X_j)=o(X_j)$. Nie wyprowadzono tego z samych wielomianów.
+\section{Audyt i powiązanie z etapami 191--210}
+\begin{itemize}
+\item Rytm 4--6--0, sześć ramion $30k+c$, $c\in\{11,13,17,19,29,31\}$: proporcja CRT $25/17$ dotyczy pełnego okresu konfiguracji sitowych, nie dowodzi proporcji trójek pierwszych. Przy progu $z(k)=\lfloor(30k+31)^{1/3}\rfloor$ podpisany wkład $\ell(k)$ jest sumą $R_aR_bR_c(\lambda_a+\lambda_b)$ po 12 trójkach zawierających parę bliźniaczą. $\ell(k)<0$ wymusza bliźniaki; brak bliźniaków poza skończonym zakresem wymusza $\ell(k)\ge0$ w ogonie.
+\item Etap 203: 780/780 ujemnych momentów w zapisanych oknach, ale pomiar $L$ nie jest pomiarem $\R$. Oś $1/4$ dla kwadratu efektywnej masy to hipoteza o fluktuacjach, nie wynik o zerach funkcji dzeta. Dla lokalnych okien $h\asymp\sqrt A$ model $\sqrt{N_{\mathrm{eff}}}\asymp A^{1/4}/\log A$ daje wykładnik $1/8$ wobec globalnego $LR\asymp A^2$.
+\item Etapy 207--209: dla $F_L(s)=\sum_k\ell(k)k^{-s}$ dodatnia kombinacja $\mathcal B_{a,r}(u)=\sum_k\ell(k)k^{-1-au}(1-k^{-u})^r$ spełnia $|\mathcal B_{a,r}(u)|\ll_r u^2$ na mocy górnego sita trójek i sumowania częściowego. Przy skończenie wielu bliźniakach $\mathcal B_{a,r}(u)\ge-O(u^r)$, więc $\liminf\mathcal B_{a,r}(u)/u^2<0$ wystarcza do dowodu. To osobne kryterium: brak tożsamości z B1. W modelu $\sum_{k\le A}\ell(k)\sim-\kappa A/\log^3 A$, przewidywana granica wynosi $-\kappa I_{a,r}$; model nie jest udowodniony.
+\item Ponownie uruchomiono certyfikat etapu 209 na pliku 100 mln współczynników ($\sum\ell=-10\,798\,318$). Dla $a=3730,r=5120,u=1/20$ górne ograniczenie $10^{2619}\mathcal B_{a,r}(u)<-20{,}49$ obejmuje nieskończony ogon, przy poprawności wygenerowanych współczynników. Wynik nie dowodzi granicy $u\downarrow0$.
+\item Etap 210: sześć przedziałów po 5 mln wartości $m$, 3\,901\,528 pierwszych lewych ramion, 458\,687 bliźniaków. Podpisane masy po usunięciu jednego czynnika $p$ oscylują wokół zera. Zapis $\prod_{p\in E}(1-T_p)f(q)=\sum_{d\mid Q_E}\mu(d)d^{-s}f(dq)$ dla $T_pf(q)=p^{-s}f(pq)$ jest dokładny; $Q_E=\prod p$. Nie gwarantuje znaku przy wadze $f(q)=a(q-2)$.
+\end{itemize}
+W niniejszym opracowaniu nie zakładamy żadnego ogłoszonego dowodu RH. Dwumian $20/10$ ma tu jawnie zdefiniowaną rolę normalizacji energii i nie uzasadnia przeniesienia zer dzeta na szereg przesunięty.
+\section{Etap 211: wspólny test dokładnej reszty B1}
+\subsection{Protokół}
+Na każdej skali $A=10^7,\dots,10^{12}$ bierzemy $m\in[A,A+B)$, $B=5\cdot10^6$, i zachowujemy tylko pełne okna długości $h=\lfloor\sqrt A\rfloor$. Łącznie 29\,738\,803 pary, 2309 okien, 3\,872\,490 pierwszych lewych ramion i 455\,811 bliźniaków. Dla każdego wiersza w oknie ustawiamy $t=((m-A)\bmod h+1/2)/h$. Pięć z góry ustalonych wariantów to waga 1, oraz $t^a(1-t)^r$ podzielona przez maksimum dla $(a,r)=(3,3),(4,4),(10,10),(3730,5120)$. Tłumią oba końce okna i stosują identyczny zbiór danych. Są to \emph{lokalne} jądra beta/Newtona, a nie $W_j(u)$ z twierdzenia \ref{th:main}.
+
+W każdej skali ustalamy $y=(6A)^{0{,}49}$. Sito segmentowe wyznacza dokładną pierwszość i $\mu(N)$. Sumę małych dzielników liczymy przez ich fazy CRT. Dla modelu $H$ stosujemy sumy prefiksowe $P(e)=\sum_{d\le e,(d,6)=1}\mu(d)/\varphi(d)$, $Q(e)=\sum_{d\le e,(d,6)=1}\mu(d)\log d/\varphi(d)$. Wartość dla wiersza to $Q(E_n)-\log N\,P(E_n)$, $E_n=\lceil N/y\rceil-1$. Obliczamy $\R=\T-S-H$ z dokładnej tożsamości; jest to \emph{diagnostyka} reszty, nie niezależny algorytm przewidujący bliźniaki. Wagi i logarytmy są zmiennoprzecinkowe.
+
+Dla każdej wagi $w$ niech $D_w=6\sum_m w(m)$, $M_w=\sum_m w(m)a(n)$, $Z_w=\sum_m w(m)a(n)Z_E(n)$. Wszystkie sumy $\T_w,S_w,H_w,\R_w,J_w$ są ważone tą samą wagą. Wtedy dokładnie
+\begin{align*}
+ \varepsilon_w&=\frac{S_w+H_w+4C_2J_w-4C_2M_w}{D_w},\\
+ \frac{\T_w}{D_w}&=\frac{4C_2(M_w-J_w)}{D_w}+\frac{\R_w}{D_w}+\varepsilon_w\\
+ &\ge\underbrace{\frac{4C_2 Z_w+\R_w}{D_w}}_{G_w}+\varepsilon_w.
+\end{align*}
+W krótkich oknach nie wolno zastąpić $\varepsilon_w$ przez $o(1)$ bez dodatkowego dowodu. $G_w$ jest diagnostycznym bilansem, a $G_w+\varepsilon_w$ rzeczywistą dolną granicą skończonej sumy.
+\subsection{Wyniki}
+\begin{center}\begin{tabular}{rrrrr}\toprule
+$A$&$h$&okna&lewe P&bliźniaki\\\midrule
+$10^7$&3162&1581&827370&120514\\
+$10^8$&10000&500&741504&96889\\
+$10^9$&31622&158&665203&77821\\
+$10^{10}$&100000&50&603982&64119\\
+$10^{11}$&316227&15&525250&50962\\
+$10^{12}$&1000000&5&509181&45506\\\bottomrule\end{tabular}\end{center}
+W tabelach oznaczenia 6/3, 8/4, 20/10 odnoszą się do rzędów, nie do dzielenia.
+\begin{center}\small\begin{tabular}{rrrrrr}\toprule
+$A$&bez wagi&6/3&8/4&20/10&5120\\\midrule
+$10^7$&0,138396&0,131710&0,130972&0,128518&0,157522\\
+$10^8$&0,136224&0,133190&0,133116&0,132707&0,103168\\
+$10^9$&0,124694&0,130746&0,131123&0,132077&0,131144\\
+$10^{10}$&0,121315&0,117407&0,116089&0,111183&0,131202\\
+$10^{11}$&0,120427&0,119713&0,119809&0,118592&0,155192\\
+$10^{12}$&0,121807&0,143068&0,145597&0,151853&$-0,009546$\\\bottomrule\end{tabular}\end{center}
+Powyżej $G_w$ dla pełnego $E$. Dla samej 5 i pełnego $E$ otrzymano 29/30 dodatnich bilansów. Dla wysokiego rzędu na największej skali $\R_w/D_w=-0{,}131630$, $4C_2 Z_w/D_w=0{,}122084$, $\varepsilon_w=0{,}109371$, zatem pełna dolna granica pozostaje dodatnia $0{,}099825$. Nie jest to kontrprzykład do globalnego B1; jest to ostrzeżenie przed ignorowaniem błędu i nadmiernym zawężaniem wagi. Przy $10^{12}$ mamy tylko pięć okien, a przy wysokim rzędzie skuteczna masa jest znacznie mniejsza. Wszystkie 30 pełnych dolnych granic dodatnie, od 0,099825 do 0,142490. Nie stanowi to samodzielnego przewidywania bliźniaków, gdyż diagnostyka wykorzystuje $\T_w$.
+\section{Audyt końcowy i kierunek dalszego dowodu}
+\begin{center}\small\begin{tabular}{p{.58\linewidth}p{.33\linewidth}}\toprule
+Element & Status\\\midrule
+9:4, 8:4, rozszerzenie modulo 25 & ścisłe liczenie klas\\
+Unia kwadratów, rezerwa $K_E$ & CRT + PNT, ustalone $E$\\
+Tożsamość $\T=S+H+\R$ & dokładna\\
+Asymptotyki $S,H$ w blokach dyadycznych & redukcja klasyczna (BV/PNT)\\
+Geometria $B_2<4$ i wagi dodatnie & ścisłe\\
+Etap 209, certyfikat znaku & ponownie wykonany\\
+Etap 211, powtórzenie programu & CSV identyczne bajt w bajt\\
+133 próbki (SymPy), 22 bezpośrednie sumy modelu & zgodne\\
+Przypisanie unii eliminatorów bez duplikatów & sprawdzone w kodzie\\
+Globalna kontrola podpisanej reszty, równanie \eqref{eq:main} & \textbf{otwarte}\\
+Hipoteza bliźniacza & \textbf{nieudowodniona}\\\bottomrule\end{tabular}\end{center}
+Odtworzenie danych: \texttt{g++ -O3 -std=c++17 test211.cpp -o test211}; następnie \texttt{./test211 > wyniki211.csv 2> probki211.csv}. Powtórzyć do \texttt{wyniki211\_check.csv}, a następnie uruchomić \texttt{python audyt.py}. Wymagane Python, pandas i SymPy. Audyt porównuje również liczebności z danymi etapu 210 po uwzględnieniu odciętych końców. Nie przeprowadzono formalnej weryfikacji Lean nowego etapu ani przedziałowego certyfikatu nowych logarytmów.
+
+\paragraph{Cel v1.} Nie rozdzielamy już Reguły Krzyża, Czybyszewa i Newtona w osobne ścieżki. Priorytetem jest wykazanie \eqref{eq:main}, najlepiej przez wspólne oszacowanie błędu blokowego z zachowaniem znaku i bez wielokrotnego liczenia eliminacji. Nie wystarczy dodatniość dla skończonych skal, zmniejszenie wariancji po odjęciu średniej ani poprawne liczenie klas. W pierwszej kolejności zachować rzędy 3, 4, 10 jako testy ustalone z góry; rząd 5120 służy kontroli koncentracji, a nie wymuszaniu znaku.
+\begin{thebibliography}{9}
+\bibitem{audit} A. Berger, \emph{Reguła Krzyża i podpisana reszta B1, etapy 191--209}, archiwum robocze, 26 XI 2026. \texttt{Berger\_Regula\_Krzyza\_B1\_etapy191\_209\_PL.tex}.
+\bibitem{mv} M. R. Murty, A. Vatwani, Twin primes and the parity problem, \emph{Journal of Number Theory} 180 (2017), 643--659.
+\bibitem{rk} A. Berger, \emph{Uniwersalna Macierz Krzyża}, 9 XI 2026, rozdz. 3.
+\bibitem{data} A. Berger, dane etapów 203, 209, 210, 211; kody i tabele w archiwum projektu.
+\end{thebibliography}
+\end{document}
